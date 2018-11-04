@@ -1,5 +1,5 @@
 ### Contains the authorization token ###
-bot.token
+kafkabot.token
 
 ### Scala ###
 *.class

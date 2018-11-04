@@ -1,34 +1,25 @@
+package hska.master.seminararbeit
+
 import java.lang.Long
 import java.util.Properties
 import java.util.concurrent.TimeUnit
 
 import org.apache.kafka.common.serialization._
 import org.apache.kafka.common.utils.Bytes
-import org.apache.kafka.streams.kstream.{
-  KStream,
-  KTable,
-  Materialized,
-  Produced
-}
+import org.apache.kafka.streams.kstream.{KStream, KTable, Materialized, Produced}
 import org.apache.kafka.streams.state.KeyValueStore
-import org.apache.kafka.streams.{
-  KafkaStreams,
-  StreamsBuilder,
-  StreamsConfig,
-  Topology
-}
+import org.apache.kafka.streams.{KafkaStreams, StreamsBuilder, StreamsConfig, Topology}
 
 import scala.collection.JavaConverters.asJavaIterableConverter
 
 class WordCounter(inputTopic: String, outputTopic: String) {
+
   val config: Properties = {
     val p = new Properties()
     p.put(StreamsConfig.APPLICATION_ID_CONFIG, "wordcount-application")
     p.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-    p.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG,
-          Serdes.String().getClass)
-    p.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG,
-          Serdes.String().getClass)
+    p.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass)
+    p.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass)
     p
   }
 
@@ -42,12 +33,9 @@ class WordCounter(inputTopic: String, outputTopic: String) {
         textLine.toLowerCase.split("\\W+").toIterable.asJava
       }
       .groupBy((_, word) => word)
-      .count(
-        Materialized
-          .as(storeName)
-          .asInstanceOf[Materialized[String,
-                                     Long,
-                                     KeyValueStore[Bytes, Array[Byte]]]])
+      .count(Materialized
+        .as(storeName)
+        .asInstanceOf[Materialized[String, Long, KeyValueStore[Bytes, Array[Byte]]]])
 
     // Stream the newly calculated word count to the output
     wordCounts
@@ -60,9 +48,8 @@ class WordCounter(inputTopic: String, outputTopic: String) {
 object WordCountApp extends App {
   val wordCounter = new WordCounter("word-count", "word-count-result")
 
-  val streams: KafkaStreams = new KafkaStreams(
-    wordCounter.countNumberOfWords("counts-store"),
-    wordCounter.config)
+  val streams: KafkaStreams =
+    new KafkaStreams(wordCounter.countNumberOfWords("counts-store"), wordCounter.config)
   streams.start()
 
   Runtime.getRuntime.addShutdownHook(new Thread(() => {
