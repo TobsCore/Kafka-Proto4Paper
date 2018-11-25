@@ -1,5 +1,3 @@
-package hska.master.seminararbeit
-
 import java.lang.Long
 import java.util.Properties
 import java.util.concurrent.TimeUnit
