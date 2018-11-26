@@ -26,7 +26,6 @@ object WordCounter {
 
   def addUserWordsToTopic(message: String): Future[RecordMetadata] = {
     val data = new ProducerRecord[String, String](topic, message)
-    logger.trace(s"Sending $message to broker")
     producer.send(data, ((_, _) => {}): Callback)
   }
 }

@@ -10,8 +10,6 @@ import org.joda.time.DateTime
 
 object CommandTrigger {
 
-  val logger = Logger(getClass)
-
   val config: Properties = {
     val p = new Properties()
     p.put(StreamsConfig.APPLICATION_ID_CONFIG, "telegram-bot-command-trigger-producer")
