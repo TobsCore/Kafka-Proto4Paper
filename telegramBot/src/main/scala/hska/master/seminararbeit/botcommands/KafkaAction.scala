@@ -9,6 +9,7 @@ trait KafkaAction extends Commands {
 
   onCommand("/start") { implicit msg =>
     using(_.from) { user =>
+      CommandTrigger.produceTriggerMessage(user.id, "start")
       reply(s"Hey ${user.firstName}, you can trigger events by using the /kafka command. Have fun!")
     }
   }
@@ -16,10 +17,21 @@ trait KafkaAction extends Commands {
   onCommand("/kafka") { implicit msg =>
     using(_.from) { user =>
       val userID = user.id
-      logger.debug(s"$userID triggered an event!")
+      logger.debug(s"$userID triggered a kafka event!")
 
       // Send message to kafka topic
-      CommandTrigger.produceTriggerMessage(userID)
+      CommandTrigger.produceTriggerMessage(userID, "kafka")
+      reply("Event triggered!")
+    }
+  }
+
+  onCommand("/herr") { implicit msg =>
+    using(_.from) { user =>
+      val userID = user.id
+      logger.debug(s"$userID triggered a herr event!")
+
+      // Send message to kafka topic
+      CommandTrigger.produceTriggerMessage(userID, "herr")
       reply("Event triggered!")
     }
   }

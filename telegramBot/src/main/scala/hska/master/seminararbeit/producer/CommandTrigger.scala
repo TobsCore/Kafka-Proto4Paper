@@ -3,7 +3,6 @@ package hska.master.seminararbeit.producer
 import java.util.Properties
 import java.util.concurrent.Future
 
-import com.typesafe.scalalogging.Logger
 import org.apache.kafka.clients.producer.{Callback, KafkaProducer, ProducerRecord, RecordMetadata}
 import org.apache.kafka.streams.StreamsConfig
 import org.joda.time.DateTime
@@ -22,10 +21,11 @@ object CommandTrigger {
   val producer = new KafkaProducer[Int, String](config)
   val topic = "telegram-command-trigger"
 
-  def produceTriggerMessage(userId: Int): Future[RecordMetadata] = {
+  def produceTriggerMessage(userId: Int, message: String = ""): Future[RecordMetadata] = {
     val fmt = "HH:mm:ss.SSS"
     val triggerDate = DateTime.now.toString(fmt)
-    val data = new ProducerRecord[Int, String](topic, userId, triggerDate)
+    val customMessage = if (message.isEmpty) { triggerDate } else { message + "|" + triggerDate }
+    val data = new ProducerRecord[Int, String](topic, userId, customMessage)
     producer.send(data, ((_, _) => {}): Callback)
   }
 }
