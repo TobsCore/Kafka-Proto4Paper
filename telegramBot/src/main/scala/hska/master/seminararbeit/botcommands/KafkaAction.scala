@@ -11,7 +11,7 @@ trait KafkaAction extends Commands {
     using(_.from) { user =>
       CommandTrigger.produceTriggerMessage(user.id, "start")
       reply(
-        s"Hey ${user.firstName}, you can trigger events by using the /kafka or /herr commands. Have fun!")
+        s"Hey ${user.firstName}, you can trigger events by using the /herr or /kafka commands. Have fun!")
     }
   }
 
