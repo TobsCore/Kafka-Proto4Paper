@@ -10,7 +10,8 @@ trait KafkaAction extends Commands {
   onCommand("/start") { implicit msg =>
     using(_.from) { user =>
       CommandTrigger.produceTriggerMessage(user.id, "start")
-      reply(s"Hey ${user.firstName}, you can trigger events by using the /kafka command. Have fun!")
+      reply(
+        s"Hey ${user.firstName}, you can trigger events by using the /kafka or /herr commands. Have fun!")
     }
   }
 
